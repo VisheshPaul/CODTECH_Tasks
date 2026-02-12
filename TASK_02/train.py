@@ -4,8 +4,12 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
+# Device check (CPU/GPU)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
+
+# Load MNIST Dataset
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -29,6 +33,8 @@ test_dataset = torchvision.datasets.MNIST(
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
+# Define Model
+
 class NeuralNet(nn.Module):
     def __init__(self):
         super(NeuralNet, self).__init__()
@@ -45,8 +51,12 @@ class NeuralNet(nn.Module):
 
 model = NeuralNet().to(device)
 
+# Loss & Optimizer
+
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# Training
 
 epochs = 5
 
@@ -66,6 +76,8 @@ for epoch in range(epochs):
 
     print(f"Epoch [{epoch+1}/{epochs}], Loss: {total_loss:.4f}")
 
+# Testing
+
 correct = 0
 total = 0
 
@@ -79,6 +91,8 @@ with torch.no_grad():
 
 accuracy = 100 * correct / total
 print("Test Accuracy:", accuracy)
+
+# Save model
 
 torch.save(model.state_dict(), "mnist_model.pth")
 print("Model saved successfully.")
